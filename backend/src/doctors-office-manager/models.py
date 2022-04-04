@@ -1,0 +1,39 @@
+from cgitb import text
+from datetime import datetime
+from enum import Enum
+from optparse import Option
+from pydantic import BaseModel
+from typing import Optional
+
+class UserRoles(int, Enum):
+    ADMIN = 1
+    GUEST = 2
+
+class PaymentType(int, Enum):
+    CASH = 1
+    TRANSFER = 2
+    CARD = 3
+
+class User(BaseModel):
+    name: str
+    role: UserRoles
+    password: str
+
+class UserUpdate(BaseModel):
+    name: Optional[str]
+    role: Optional[UserRoles]
+    password: Optional[str]
+
+class Appointment(BaseModel):
+    date: datetime
+    notes: str
+    patient_id: str
+
+class Payment(BaseModel):
+    amount: int
+    date: datetime
+    type: PaymentType
+
+class ClinicHistory(BaseModel):
+    patient_id: str
+    notes: str
