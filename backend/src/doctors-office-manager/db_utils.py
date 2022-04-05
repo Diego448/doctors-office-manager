@@ -13,7 +13,7 @@ def create_user(user: User) -> dict:
     response['acknowledged'] = result.acknowledged
     if result.acknowledged:
         response['inserted_id'] = str(result.inserted_id)
-        response['data'] = user.json()
+        response['data'] = user
     return response
 
 def get_users():
