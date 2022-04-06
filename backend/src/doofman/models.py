@@ -14,6 +14,10 @@ class PaymentType(int, Enum):
     TRANSFER = 2
     CARD = 3
 
+class Status(int, Enum):
+    ACTIVE = 1
+    INACTIVE = 2
+
 class User(BaseModel):
     name: str
     role: UserRoles
@@ -37,3 +41,10 @@ class Payment(BaseModel):
 class ClinicHistory(BaseModel):
     patient_id: str
     notes: str
+
+class Patient(BaseModel):
+    name: str
+    telephone_number: str
+    email: str
+    status: Status
+    debt: int
