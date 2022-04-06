@@ -3,4 +3,4 @@ backend/include/
 backend/lib/
 backend/lib64
 backend/pyvenv.cfg
-backend/src/doctors-office-manager/__pycache__/
+backend/src/doofman/__pycache__/
