@@ -1,6 +1,7 @@
 from pymongo import MongoClient
-from models import User
+from models import User, Patient, UserUpdate
 from bson import ObjectId, json_util
+from typing import Union, Final
 import json
 
 client = MongoClient()
@@ -19,6 +20,9 @@ def create_user(user: User) -> dict:
 def get_users():
     return json.loads(json_util.dumps(db.users.find({})))
 
+def get_user(user_id: str):
+    return json.loads(json_util.dumps(db.users.find({'_id': ObjectId(user_id)})))
+
 def delete_user(user_id: str):
     response = {}
     result = db.users.delete_one({'_id': ObjectId(user_id)})
@@ -27,4 +31,23 @@ def delete_user(user_id: str):
         response['deleted_id'] = user_id
     else:
         response['success'] = False
+    return response
+
+def update_user(user_id: str, user_update: UserUpdate):
+    response = {}
+    result = db.users.update_one({'_id': ObjectId(user_id)}, {'$set':user_update.dict()})
+    if result.acknowledged:
+        response['success'] = True
+        response['updated_id'] = user_id
+    else:
+        response['success'] = False
+    return response
+
+def add(data: Union[User, Patient], collection: str) -> dict:
+    response = {}
+    result = db[collection].insert_one(data.dict())
+    response['success'] = result.acknowledged
+    if result.acknowledged:
+        response['inserted_id'] = str(result.inserted_id)
+        response['data'] = data
     return response
