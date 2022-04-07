@@ -1,12 +1,15 @@
 from pymongo import MongoClient
+from pymongo.errors import PyMongoError
 from models import User, Patient, UserUpdate
 from bson import ObjectId, json_util
 from typing import Union, Final
 import json
 
-client = MongoClient()
-
-db = client.doctors_office_management_dev
+try:
+    client = MongoClient()
+    db = client.doctors_office_management_dev
+except PyMongoError as e:
+    print(f'An error occured: {e}')
 
 def create_user(user: User) -> dict:
     response = {}
@@ -25,12 +28,16 @@ def get_user(user_id: str):
 
 def delete_user(user_id: str):
     response = {}
-    result = db.users.delete_one({'_id': ObjectId(user_id)})
-    if result.deleted_count == 1:
-        response['success'] = True
-        response['deleted_id'] = user_id
-    else:
+    try:
+        result = db.users.delete_one({'_id': ObjectId(user_id)})
+        if result.deleted_count == 1:
+            response['success'] = True
+            response['deleted_id'] = user_id
+        else:
+            response['success'] = False
+    except PyMongoError as e:
         response['success'] = False
+        response['error'] = e._message
     return response
 
 def update_user(user_id: str, user_update: UserUpdate):
