@@ -50,6 +50,20 @@ def update_user(user_id: str, user_update: UserUpdate) -> dict:
         response['success'] = False
     return response
 
+def get(id: str, collection: str) -> list:
+    try:
+        response = json.loads(json_util.dumps(db.users.find({'_id': ObjectId(id)})))
+    except PyMongoError as e:
+        response = [{'error': e._message}]
+    return response
+
+def get_all(collection: str) -> list:
+    try:
+        response = json.loads(json_util.dumps(db[collection].find({})))
+    except PyMongoError as e:
+        response = [{'error': e._message}]
+    return response
+
 def add(data: Union[User, Patient], collection: str) -> dict:
     response = {}
     try:
@@ -58,6 +72,34 @@ def add(data: Union[User, Patient], collection: str) -> dict:
         if result.acknowledged:
             response['inserted_id'] = str(result.inserted_id)
             response['data'] = data
+    except PyMongoError as e:
+        response['success'] = False
+        response['error'] = e._message
+    return response
+
+def delete(id: str, collection: str) -> dict:
+    response = {}
+    try:
+        result = db[collection].delete_one({'_id': ObjectId(id)})
+        if result.deleted_count == 1:
+            response['success'] = True
+            response['deleted_id'] = id
+        else:
+            response['success'] = False
+    except PyMongoError as e:
+        response['success'] = False
+        response['error'] = e._message
+    return response
+
+def update(id: str, update_data: Union[UserUpdate, Patient], collection: str) -> dict:
+    response = {}
+    try:
+        result = db[collection].update_one({'_id': ObjectId(id)}, {'$set':update_data.dict()})
+        if result.acknowledged:
+            response['success'] = True
+            response['updated_id'] = id
+        else:
+            response['success'] = False
     except PyMongoError as e:
         response['success'] = False
         response['error'] = e._message
