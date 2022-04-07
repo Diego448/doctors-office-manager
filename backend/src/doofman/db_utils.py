@@ -52,9 +52,13 @@ def update_user(user_id: str, user_update: UserUpdate):
 
 def add(data: Union[User, Patient], collection: str) -> dict:
     response = {}
-    result = db[collection].insert_one(data.dict())
-    response['success'] = result.acknowledged
-    if result.acknowledged:
-        response['inserted_id'] = str(result.inserted_id)
-        response['data'] = data
+    try:
+        result = db[collection].insert_one(data.dict())
+        response['success'] = result.acknowledged
+        if result.acknowledged:
+            response['inserted_id'] = str(result.inserted_id)
+            response['data'] = data
+    except PyMongoError as e:
+        response['success'] = False
+        response['error'] = e._message
     return response
