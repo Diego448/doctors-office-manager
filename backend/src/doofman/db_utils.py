@@ -20,13 +20,13 @@ def create_user(user: User) -> dict:
         response['data'] = user
     return response
 
-def get_users():
+def get_users() -> list:
     return json.loads(json_util.dumps(db.users.find({})))
 
-def get_user(user_id: str):
+def get_user(user_id: str) -> dict:
     return json.loads(json_util.dumps(db.users.find({'_id': ObjectId(user_id)})))
 
-def delete_user(user_id: str):
+def delete_user(user_id: str) -> dict:
     response = {}
     try:
         result = db.users.delete_one({'_id': ObjectId(user_id)})
@@ -40,7 +40,7 @@ def delete_user(user_id: str):
         response['error'] = e._message
     return response
 
-def update_user(user_id: str, user_update: UserUpdate):
+def update_user(user_id: str, user_update: UserUpdate) -> dict:
     response = {}
     result = db.users.update_one({'_id': ObjectId(user_id)}, {'$set':user_update.dict()})
     if result.acknowledged:
