@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from db_utils import delete_user, get_users, create_user, get_user, update_user
+from db_utils import delete_user, get_users, create_user, get_user, update_user, add
 from models import User, UserUpdate
 
 app = FastAPI()
@@ -23,3 +23,7 @@ async def user_edit(user_id: str, user_update: UserUpdate):
 @app.delete('/user/remove/{user_id}')
 async def remove_user(user_id: str):
     return delete_user(user_id)
+
+@app.post('/test/add')
+async def test_add(user: User):
+    return add(user, 'users')
