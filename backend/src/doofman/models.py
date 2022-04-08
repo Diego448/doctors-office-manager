@@ -33,6 +33,11 @@ class Appointment(BaseModel):
     notes: str
     patient_id: str
 
+class AppointmentUpdate(BaseModel):
+    date: Optional[datetime]
+    notes: Optional[str]
+    patient_id: Optional[str]
+
 class Payment(BaseModel):
     amount: int
     date: datetime
@@ -48,3 +53,10 @@ class Patient(BaseModel):
     email: str
     status: Status
     debt: int
+
+class PatientUpdate(BaseModel):
+    name: Optional[str]
+    telephone_number: Optional[str]
+    email: Optional[str]
+    status: Optional[Status]
+    debt: Optional[int]
