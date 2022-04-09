@@ -43,3 +43,7 @@ async def update_patient(patient_id: str, patient_update: PatientUpdate):
 @app.delete('/patient/delete/{patient_id}')
 async def delete_patient(patient_id: str):
     return delete(patient_id, 'patients')
+
+@app.get('/appointment/all')
+async def get_appointments():
+    return get_all('appointments')
