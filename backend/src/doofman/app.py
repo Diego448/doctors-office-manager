@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from db_utils import add, get, get_all, update, delete
-from models import User, UserUpdate, Patient, PatientUpdate
+from db_utils import add, get, get_all, update, delete, get_related
+from models import *
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -58,5 +58,41 @@ async def delete_patient(patient_id: str):
     return delete(patient_id, 'patients')
 
 @app.get('/appointment/all')
-async def get_appointments():
+async def get_all_appointments():
     return get_all('appointments')
+
+@app.get('/appointment/{patient_id}')
+async def get_appointments(patient_id: str):
+    return get_related('patient_id', patient_id, 'appointments')
+
+@app.post('/appointment/add')
+async def add_appointment(appointment: Appointment):
+    return add(appointment, 'appointments')
+
+@app.put('/appointment/update/{appointment_id}/')
+async def update_appointment(appointment_update: AppointmentUpdate, appointment_id):
+    return update(appointment_id, appointment_update, 'appointments')
+
+@app.get('/consult/{patient_id}')
+async def get_consults(patient_id: str):
+    return get_related('patient_id', patient_id, 'consults')
+
+@app.post('/consult/add')
+async def add_consult(consult: Consult):
+    return add(consult, 'consults')
+
+@app.get('/consult/{consult_id}')
+async def get_consult(consult_id: str):
+    return get(consult_id, 'consults')
+
+@app.get('/payment/all')
+async def get_all_payments():
+    return get_all('payments')
+
+@app.get('/payment/{patient_id}')
+async def get_payments(patient_id: str):
+    return get_related('patient_id', patient_id, 'payments')
+
+@app.post('/payment/add')
+async def add_payment(payment: Payment):
+    return add(payment, 'payments')
