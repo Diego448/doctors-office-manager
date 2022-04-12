@@ -47,6 +47,7 @@ class Payment(BaseModel):
     amount: int
     date: datetime
     type: PaymentType
+    patient_id: str
 
 class Consult(BaseModel):
     patient_id: str
