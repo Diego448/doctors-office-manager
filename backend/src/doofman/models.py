@@ -16,6 +16,11 @@ class Status(int, Enum):
     ACTIVE = 1
     INACTIVE = 2
 
+class AppointmentStatus(int, Enum):
+    SCHEDULED = 1
+    COMPLETED = 2
+    CANCELLED = 3
+
 class User(BaseModel):
     name: str
     role: UserRoles
@@ -30,27 +35,30 @@ class Appointment(BaseModel):
     date: datetime
     notes: str
     patient_id: str
+    status: AppointmentStatus
 
 class AppointmentUpdate(BaseModel):
     date: Optional[datetime]
     notes: Optional[str]
     patient_id: Optional[str]
+    status: Optional[AppointmentStatus]
 
 class Payment(BaseModel):
     amount: int
     date: datetime
     type: PaymentType
 
-class ClinicHistory(BaseModel):
+class Consult(BaseModel):
     patient_id: str
     notes: str
+    appointment_id: str
+    cost: int
 
 class Patient(BaseModel):
     name: str
     telephone_number: str
     email: str
     status: Status
-    debt: int
 
 class PatientUpdate(BaseModel):
     name: Optional[str]
