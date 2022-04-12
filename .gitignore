@@ -4,3 +4,4 @@ backend/lib/
 backend/lib64
 backend/pyvenv.cfg
 backend/src/doofman/__pycache__/
+backend/mongo_querys/
