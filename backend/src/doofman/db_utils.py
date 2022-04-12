@@ -52,7 +52,15 @@ def update_user(user_id: str, user_update: UserUpdate) -> dict:
 
 def get(id: str, collection: str) -> list:
     try:
-        response = json.loads(json_util.dumps(db.users.find({'_id': ObjectId(id)})))
+        response = json.loads(json_util.dumps(db[collection].find({'_id': ObjectId(id)})))
+    except PyMongoError as e:
+        response = [{'error': e._message}]
+    return response
+
+def get_related(field:str, id: str, collection: str) -> list:
+    try:
+        response = json.loads(json_util.dumps(db[collection].find({field: id})))
+        print(collection, field, id)
     except PyMongoError as e:
         response = [{'error': e._message}]
     return response
