@@ -66,4 +66,3 @@ class PatientUpdate(BaseModel):
     telephone_number: Optional[str]
     email: Optional[str]
     status: Optional[Status]
-    debt: Optional[int]
