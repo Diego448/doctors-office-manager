@@ -2,7 +2,7 @@ from pymongo import MongoClient
 from pymongo.errors import PyMongoError
 from models import User, Patient, UserUpdate
 from bson import ObjectId, json_util
-from typing import Union, Final
+from typing import Union
 import json
 
 try:
@@ -102,7 +102,7 @@ def delete(id: str, collection: str) -> dict:
 def update(id: str, update_data: Union[UserUpdate, Patient], collection: str) -> dict:
     response = {}
     try:
-        result = db[collection].update_one({'_id': ObjectId(id)}, {'$set':update_data.dict()})
+        result = db[collection].update_one({'_id': ObjectId(id)}, {'$set':update_data.dict(exclude_unset=True)})
         if result.acknowledged:
             response['success'] = True
             response['updated_id'] = id

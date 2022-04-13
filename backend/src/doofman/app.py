@@ -49,7 +49,7 @@ async def get_patient(patient_id: str):
 async def add_patient(patient: Patient):
     return add(patient, 'patients')
 
-@app.put('/patient/update/{patient_id}')
+@app.patch('/patient/update/{patient_id}')
 async def update_patient(patient_id: str, patient_update: PatientUpdate):
     return update(patient_id, patient_update, 'patients')
 
