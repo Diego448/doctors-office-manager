@@ -1,9 +1,12 @@
 from pymongo import MongoClient
 from pymongo.errors import PyMongoError
-from models import User, Patient, UserUpdate
+from models import User, Patient, UserUpdate, PatientUpdate, AppointmentUpdate, Appointment, Consult, Payment
 from bson import ObjectId, json_util
 from typing import Union
 import json
+
+GenericDataUpdate = Union[UserUpdate, Patient, PatientUpdate, AppointmentUpdate]
+GenericData = Union[Patient, User, Appointment, Consult, Payment]
 
 try:
     client = MongoClient()
@@ -72,7 +75,7 @@ def get_all(collection: str) -> list:
         response = [{'error': e._message}]
     return response
 
-def add(data: Union[User, Patient], collection: str) -> dict:
+def add(data: GenericData, collection: str) -> dict:
     response = {}
     try:
         result = db[collection].insert_one(data.dict())
@@ -99,7 +102,7 @@ def delete(id: str, collection: str) -> dict:
         response['error'] = e._message
     return response
 
-def update(id: str, update_data: Union[UserUpdate, Patient], collection: str) -> dict:
+def update(id: str, update_data: GenericDataUpdate, collection: str) -> dict:
     response = {}
     try:
         result = db[collection].update_one({'_id': ObjectId(id)}, {'$set':update_data.dict(exclude_unset=True)})
